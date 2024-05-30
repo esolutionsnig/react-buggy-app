@@ -8,7 +8,7 @@ function App() {
   // Bug 1: Incorrect useEffect dependency
   useEffect(() => {
     fetchTodos();
-  }, [todos]);
+  }, []);
 
   const fetchTodos = async () => {
     try {
@@ -21,21 +21,22 @@ function App() {
   };
 
   const addTodo = () => {
-    if (newTodo.trim() === '') return; // Bug 2: Not handling empty input
+    if (newTodo.trim() === '' || newTodo.length === 0) return; // Bug 2: Not handling empty input
     const todo = {
       id: todos.length + 1,
       title: newTodo,
       completed: false,
     };
     // Bug 3: Incorrectly updating state
-    setTodos(todos.push(todo));
+    setTodos((todos) => ([...todos, todo]));
     setNewTodo('');
   };
 
   const toggleTodo = (id) => {
     const updatedTodos = todos.map(todo => {
       if (todo.id === id) {
-        todo.completed = !todo.completed; // Bug 4: Mutating state directly
+        return {...todo, completed: !todo.completed}
+       // Bug 4: Mutating state directly
       }
       return todo;
     });
